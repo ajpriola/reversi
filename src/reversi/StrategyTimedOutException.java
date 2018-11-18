@@ -5,12 +5,12 @@ package reversi;
  */
 public class StrategyTimedOutException extends Exception {
 
-	
+
 	private static final long serialVersionUID = 1L;
 
 	private Strategy opponentStrategy;
 	private Strategy timedOutStrategy;
-	
+
 	public StrategyTimedOutException(Strategy timedOutStrategy, Strategy opponentStrategy) {
 		this.timedOutStrategy = timedOutStrategy;
 		this.opponentStrategy = opponentStrategy;
@@ -31,5 +31,5 @@ public class StrategyTimedOutException extends Exception {
 		return this.opponentStrategy;
 	}
 
-	
+
 }

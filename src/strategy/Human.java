@@ -6,6 +6,7 @@ import java.util.Scanner;
 import java.util.Set;
 
 import reversi.Board;
+import reversi.ReversiTournament;
 import reversi.Square;
 import reversi.Strategy;
 

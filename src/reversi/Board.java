@@ -129,19 +129,18 @@ public class Board {
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
-        builder.append("|======================================================================================================|\n");
 		for (int row = 0; row < this.size; ++row) {
 			for (int col = 0; col < this.size; ++col) {
 				Player owner = this.owners.get(new Square(row, col));
 				if (owner == Player.WHITE) {
-					builder.append("| (" + (row) + ", " + (col) + "): W |");
+					builder.append('W');
 				} else if (owner == Player.BLACK) {
-					builder.append("| (" + (row) + ", " + (col) + "): B |");
+					builder.append('B');
 				} else {
-					builder.append("| (" + (row) + ", " + (col) + "):   |");
+					builder.append('_');
 				}
 			}
-            builder.append("\n|======================================================================================================|\n");
+			builder.append('\n');
 		}
 		return builder.toString();
 	}
