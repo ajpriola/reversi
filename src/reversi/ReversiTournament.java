@@ -29,7 +29,7 @@ public class ReversiTournament {
 		List<Strategy> strategies = Lists.newArrayList();
 
 		strategies.add(new RandomStrategy());
-		strategies.add(new AlphaBeta());
+		strategies.add(new WithOpeningBook());
 
 		// The number of wins of each strategy 
 		Map<Strategy, Integer> wins = Maps.newHashMap();
