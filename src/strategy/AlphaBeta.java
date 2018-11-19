@@ -22,14 +22,19 @@ public class AlphaBeta implements Strategy {
 
     protected Player you;
     protected Player opponent;
-    private int maxDepth = 7;
+    private int maxDepth = 7; // how many steps to look ahead
 
     class ScoredMove {
+        // return this instead of an integer so that you can include the square also
+        // should have everything needed to recreate a move (or lack of one)
         public final Square square;
         private final int score;
         private final Player player;
         private final boolean isFinal;
         private final boolean isPass;
+        
+        // score is relative to the current player (which was more important
+        //  when there used to be just one bestMove function
         public int getScore(Player player) {
             if (player==this.player) {
                 return score;
@@ -69,11 +74,13 @@ public class AlphaBeta implements Strategy {
      */
     @Override
     public Square chooseSquare(Board board) {
+        // hard-code players for alpha-beta
         this.you = board.getCurrentPlayer();
         this.opponent = this.you.opponent();
         System.out.println("You are: "+you.name());
         //System.out.println(score(you, board)+":");
         //System.out.println(board);
+        // alpha = -inf, beta = +inf
         ScoredMove nextMove = this.bestMove(board, this.maxDepth, Integer.MIN_VALUE, Integer.MAX_VALUE);
         System.out.println("Best: "+nextMove.getScore(you));
         return nextMove.square;
@@ -81,6 +88,7 @@ public class AlphaBeta implements Strategy {
   
 
     protected ScoredMove worstMove(Board board, int maxDepth, int alpha, int beta) {
+        // maxScore is from opponent's perspective
         int maxScore = Integer.MIN_VALUE;
         Square maxSquare = null;
         if (board.isComplete()) {
@@ -113,9 +121,13 @@ public class AlphaBeta implements Strategy {
             return new ScoredMove(counterMove.getScore(opponent), opponent, false); // pass
         }
         for (Square s : board.getCurrentPossibleSquares()) {
+            // only need to worry about alpha/beta here, because
+            //  this is the only case when you might have siblings to prune
             Board withNextMove = board.play(s);
             ScoredMove counterMove = this.bestMove(withNextMove, maxDepth-1, alpha, beta);
             int expectedScore = counterMove.getScore(opponent);
+            // these three if statements correspond to the three main statements
+            //  in min-value in the alpha-beta pseudocode
             if (expectedScore>maxScore) {
                 //System.out.println("Worst so far ("+opponent.name()+"): "+expectedScore);
                 //System.out.println(board);
@@ -133,6 +145,7 @@ public class AlphaBeta implements Strategy {
         return new ScoredMove(maxScore, opponent, maxSquare);
     }
     protected ScoredMove bestMove(Board board, int maxDepth, int alpha, int beta) {
+        // mostly identical to worstMove
         int maxScore = Integer.MIN_VALUE;
         Square maxSquare = null;
         if (board.isComplete()) {
@@ -174,10 +187,10 @@ public class AlphaBeta implements Strategy {
                 maxScore=expectedScore;
                 maxSquare = s;
             }
-            if (maxScore>=beta) {
+            if (maxScore>=beta) { // no negative b/c alpha/beta are from you's perspective
                 return new ScoredMove(maxScore, you, maxSquare);
             }
-            if (maxScore>=alpha) {
+            if (maxScore>=alpha) { // alpha instead of beta (these are the only two differences)
                 alpha = maxScore;
             }
         }
@@ -186,14 +199,16 @@ public class AlphaBeta implements Strategy {
     }
 
     private int score(Player player, Board board) {
+        // score of player.opponent() is just -score
         if (!board.isComplete()) {
+            // how many more squares you hold than your opponent
             return board.getPlayerSquareCounts().get(player)-board.getPlayerSquareCounts().get(player.opponent());
         }
         if (board.getWinner()==player) {
             //System.out.println(you==board.getWinner()?"You win!":"You lose.");
             //System.out.println(board.getMoves());
             //System.out.println(board);
-            return board.size()*board.size();
+            return board.size()*board.size(); // winning is equivalent to holding all of the squares
         }
         else {
             //System.out.println(you==board.getWinner()?"You win!":"You lose.");
