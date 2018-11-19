@@ -29,7 +29,7 @@ public class ReversiTournament {
 		List<Strategy> strategies = Lists.newArrayList();
 
 		strategies.add(new RandomStrategy());
-		strategies.add(new NaiveMinMax());
+		strategies.add(new AlphaBeta());
 
 		// The number of wins of each strategy 
 		Map<Strategy, Integer> wins = Maps.newHashMap();
@@ -53,6 +53,7 @@ public class ReversiTournament {
 					try {
 						winner = reversi.getWinner(reversi.play(board));
 					} catch (StrategyTimedOutException e) {
+                                                System.out.println("Timed out: "+e.getTimedOutStrategy());
 						winner = e.getOpponentStrategy();
 					}
 					// If one of the strategies timed out, the opponent is considered the winner 
